@@ -1,47 +1,27 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
+    <nav>
+      <router-link to="/">Home</router-link>
+      <router-link to="/Menu">Menu</router-link>
+    </nav>
+    <router-view></router-view>
   </header>
-
-  <main>
-    <TheWelcome />
-  </main>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-}
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
+<!--
+<script>
+import { provide, ref } from 'vue';
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>
+export default {
+  setup() {
+    const tasks = ref([
+      { id: 1, title: 'Learn Vue 3', content: 'Learn the fundamentals of Vue.js 3 !' },
+      { id: 2, title: 'Build a Project', content: 'Build a project from A to Z !' },
+    ]);
+    provide('tasks', tasks);
+    return { tasks };
+  },
+};
+</script>
+-->
