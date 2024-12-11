@@ -1,5 +1,7 @@
 <template>
   <header>
+    <h1>SUPERRR HEADER DE LA MORT QUI TUE (NOM DU RESTO)</h1>
+
     <nav>
       <router-link to="/">Home</router-link>
       <router-link to="/Menu">Menu</router-link>
