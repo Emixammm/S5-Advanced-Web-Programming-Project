@@ -1,4 +1,23 @@
 <template>
+  <div id="app">
+    <Plats />
+  </div>
+</template>
+
+<script>
+import Menu from './components/menu.vue';
+
+export default {
+  components: {
+    Menu,
+  },
+};
+</script>
+
+
+
+
+<!--<template>
   <header>
     <h1>SUPERRR HEADER DE LA MORT QUI TUE (NOM DU RESTO)</h1>
 
@@ -10,8 +29,6 @@
   </header>
 </template>
 
-
-<!--
 <script>
 import { provide, ref } from 'vue';
 
