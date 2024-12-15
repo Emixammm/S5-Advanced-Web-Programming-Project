@@ -8,7 +8,7 @@ const port = 3000;
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'password',
+    password: 'Maxime8696++',
     database: 'restaurant_db'
 });
 
@@ -23,9 +23,29 @@ db.connect((err) => {
 // Middleware pour parser les données JSON
 app.use(express.json());
 
-// Endpoint pour récupérer tous les plats
+// Endpoint to get all the dishes
 app.get('/dish', (req, res) => {
     const sql = `SELECT * FROM Dish`; // Table correcte : "Dish"
+    db.query(sql, (err, results) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        res.json(results);
+    });
+});
+// Endpoint to get all the managers
+app.get('/manager', (req, res) => {
+    const sql = `SELECT * FROM Manager`; // Table correcte : "Manager"
+    db.query(sql, (err, results) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        res.json(results);
+    });
+});
+// Endpoint to get all the waiters
+app.get('/waiter', (req, res) => {
+    const sql = `SELECT * FROM Waiter`; // Table correcte : "Waiter"
     db.query(sql, (err, results) => {
         if (err) {
             return res.status(500).send(err);
@@ -37,48 +57,52 @@ app.get('/dish', (req, res) => {
 // Route pour ajouter un nouveau plat
 app.post('/dish', (req, res) => {
     const newDish = {
-        dish_name: req.body.dish_name,
-        ingredient_list: req.body.ingredient_list,
-        allergenes: req.body.allergenes || null, // Optionnel
-        dish_price: req.body.dish_price,
-        dish_available: req.body.dish_available,
-        image_path: req.body.image_path || null, // Optionnel
+        dishName: req.body.dishName, // Correction du nom
+        ingredientList: req.body.ingredientList,
+        allergenesList: req.body.allergenesList || null, // Nom correct pour la colonne
+        dishPrice: req.body.dishPrice,
+        dishAvailable: req.body.dishAvailable,
+        imagePath: req.body.imagePath || null,
     };
 
-    const sql = 'INSERT INTO Dish SET ?';
+    const sql = 'INSERT INTO Dish SET ?';  
     db.query(sql, newDish, (err, result) => {
         if (err) {
-            return res.status(500).send(err);
+            console.error('Error inserting dish:', err);
+            return res.status(500).send(err); // Répond avec l'erreur
         }
         res.json({
-            message: 'Plat ajouté avec succès',
+            message: 'Dish added successfully',
             id: result.insertId
         });
     });
 });
 
+
 // Route pour supprimer un plat par ID
-app.delete('/dish/:id', (req, res) => {
-    const dishId = parseInt(req.params.id, 10); // Validation de l'ID
+app.delete('/dish/:dishId', (req, res) => {
+    const dishId = parseInt(req.params.dishId, 10); // Correction : utilise dishId
 
     if (isNaN(dishId)) {
-        return res.status(400).send({ error: 'ID invalide' });
+        return res.status(400).send({ error: 'Invalid ID' });
     }
 
-    const sql = 'DELETE FROM Dish WHERE id = ?'; // Table correcte : "dish"
+    const sql = 'DELETE FROM Dish WHERE dishID = ?'; // Utilise dishID
     db.query(sql, [dishId], (err, result) => {
         if (err) {
-            console.error('Erreur lors de la suppression :', err);
-            return res.status(500).send({ error: 'Erreur interne du serveur' });
+            console.error('Error occurred during deletion:', err);
+            return res.status(500).send({ error: 'Internal server error' });
         }
 
         if (result.affectedRows === 0) {
-            return res.status(404).send({ error: 'Plat non trouvé' });
+            return res.status(404).send({ error: 'Dish not found' });
         }
 
-        res.status(200).send({ message: 'Plat supprimé avec succès' });
+        res.status(200).send({ message: 'Dish deleted successfully' });
     });
 });
+
+
 
 // Démarrer le serveur
 app.listen(port, () => {

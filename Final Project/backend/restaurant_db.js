@@ -2,19 +2,12 @@ const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors"); // Import the cors middleware
 
-const app = express();
-
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "password",
-  database: "restaurant_db",
-});
+const app = express();  
 
 const con = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'password', // Replace with your MySQL password
+    password: 'Maxime8696++', // Replace with your MySQL password
   });
 
 app.use(cors({
@@ -22,34 +15,6 @@ app.use(cors({
   methods: ["GET", "POST","DELETE","PUT"],       
   credentials: true,              
 }));
-
-app.get("/dishes", (req, res) => {
-  db.query("SELECT * FROM Dish", (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Error fetching dishes");
-    } else {
-      res.json(results);
-    }
-  });
-});
-
-// Endpoint to delete a dish
-app.delete('/dishes/:id', (req, res) => {
-    const dishID = req.params.id;
-  
-    const deleteDishQuery = `DELETE FROM Dish WHERE dishID = ?`;
-  
-    con.query(deleteDishQuery, [dishID], (err, result) => {
-      if (err) {
-        return res.status(500).json({ error: 'Failed to delete the dish' });
-      }
-      res.status(200).json({ message: 'Dish deleted successfully' });
-    });
-  });
-
-  app.listen(3000, () => console.log("Server running on http://localhost:3000"));
-
 
 con.connect(function (err) {
   if (err) {
@@ -114,64 +79,114 @@ con.connect(function (err) {
           ['Chocolate Cake', 'Flour, Cocoa, Sugar, Eggs', 'Gluten, Eggs, Dairy', 6, true, '/images/chocolate_cake.jpg'],
         ];
 
-        const insertDishQuery = `INSERT INTO Dish (dishName, ingredientList, allergenesList, dishPrice, dishAvailable, imagePath) 
+        const insertDish = `INSERT INTO Dish (dishName, ingredientList, allergenesList, dishPrice, dishAvailable, imagePath) 
           VALUES (?, ?, ?, ?, ?, ?)`;
 
-        Promise.all(
-          dishes.map(Dish =>
-            new Promise((resolve, reject) => {
-              con.query(insertDishQuery, Dish, (err, result) => {
-                if (err) {
-                  console.error("Error inserting dish:", err.message);
-                  reject(err);
-                } else {
-                  console.log(`Inserted dish: ${Dish[0]}`);
-                  resolve(result);
-                }
-              });
-            })
-          )
-        )
-          .then(() => {
-            console.log("All dishes inserted successfully.");
+        const managers = [
+          ['MaximeTang', 'Tang'],
+          ['TiphaineFournier', 'Fournier'],
+          ['AlexandreGobe','Gobe']
+        ];
+
+        const insertManager = `INSERT INTO Manager (ManagerName, ManagerPassword) 
+          VALUES (?, ?)`;
+
+        const waiters = [
+          ['SamuelDoyen', 'Doyen'],
+          ['ThibaultBial', 'Bial'],
+          ['JonathanAyeto', 'Ayeto'],
+          ['MathisBeurotte','Beurotte']
+        ]
+
+        const insertWaiter = `INSERT INTO Waiter (waiterName, waiterPassword) 
+          VALUES (?, ?)`;
+
+
+          Promise.all(
+            dishes.map(dish =>
+                new Promise((resolve, reject) => {
+                    con.query(insertDish, dish, (err, result) => {
+                        if (err) {
+                            console.error("Erreur lors de l'insertion du dish :", err.message);
+                            reject(err);
+                        } else {
+                            console.log(`Dish inséré : ${dish[0]}`);
+                            resolve(result);
+                        }
+                    });
+                })
+            )
+        ).then(() => {
+            console.log("Tous les dishes ont été insérés.");
+
+            // Création et insertion des managers
+            con.query(managerTable, err => {
+                if (err) throw err;
+                console.log("Table Manager créée.");
+
+                Promise.all(
+                    managers.map(manager =>
+                        new Promise((resolve, reject) => {
+                            con.query(insertManager, manager, (err, result) => {
+                                if (err) {
+                                    console.error("Erreur lors de l'insertion du manager :", err.message);
+                                    reject(err);
+                                } else {
+                                    console.log(`Manager inséré : ${manager[0]}`);
+                                    resolve(result);
+                                }
+                            });
+                        })
+                    )
+                ).then(() => {
+                    console.log("Tous les managers ont été insérés.");
+
+                    // Création et insertion des waiters
+                    con.query(waiterTable, err => {
+                        if (err) throw err;
+                        console.log("Table Waiter créée.");
+
+                        Promise.all(
+                            waiters.map(waiter =>
+                                new Promise((resolve, reject) => {
+                                    con.query(insertWaiter, waiter, (err, result) => {
+                                        if (err) {
+                                            console.error("Erreur lors de l'insertion du waiter :", err.message);
+                                            reject(err);
+                                        } else {
+                                            console.log(`Waiter inséré : ${waiter[0]}`);
+                                            resolve(result);
+                                        }
+                                    });
+                                })
+                            )
+                        ).then(() => {
+                            console.log("Tous les waiters ont été insérés.");
+                            closeConnection();
+                        }).catch(err => {
+                            console.error("Erreur lors de l'insertion des waiters :", err);
+                            closeConnection();
+                        });
+                    });
+                }).catch(err => {
+                    console.error("Erreur lors de l'insertion des managers :", err);
+                    closeConnection();
+                });
+            });
+        }).catch(err => {
+            console.error("Erreur lors de l'insertion des dishes :", err);
             closeConnection();
-          })
-          .catch(err => {
-            console.error("Error inserting dishes:", err);
-            closeConnection();
-          });
-      });
-
-      con.query(managerTable, function (err) {
-        if (err) throw err;
-        console.log("Table Manager ensured!");
-      });
-
-      con.query(waiterTable, function (err) {
-        if (err) throw err;
-        console.log("Table Waiter ensured!");
-      });
-
-      con.query(dishListTable, function (err) {
-        if (err) throw err;
-        console.log("Table DishList created.");
-      });
-
-      con.query(customerTable, function (err) {
-        if (err) throw err;
-        console.log("Table Customer created.");
-      });
-
-      // Close connection in a separate function
-      function closeConnection() {
-        con.end(err => {
-          if (err) {
-            console.error("Error closing connection:", err.message);
-          } else {
-            console.log("Connection closed.");
-          }
         });
-      }
     });
-  });
 });
+
+// Fonction pour fermer la connexion à la base de données
+function closeConnection() {
+    con.end(err => {
+        if (err) {
+            console.error("Erreur lors de la fermeture de la connexion :", err.message);
+        } else {
+            console.log("Connexion fermée.");
+        }
+    });
+}});})
