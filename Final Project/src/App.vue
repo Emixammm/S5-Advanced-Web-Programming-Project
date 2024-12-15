@@ -1,4 +1,4 @@
-<template>
+<!--<template>
   <div id="app">
     <Plats />
   </div>
@@ -13,17 +13,17 @@ export default {
   },
 };
 </script>
+-->
 
 
 
-
-<!--<template>
+<template>
   <header>
-    <h1>SUPERRR HEADER DE LA MORT QUI TUE (NOM DU RESTO)</h1>
+    <h1>Restaurant name</h1>
 
     <nav>
       <router-link to="/">Home</router-link>
-      <router-link to="/Menu">Menu</router-link>
+      <router-link to="/logIn">Log In</router-link>
     </nav>
     <router-view></router-view>
   </header>
@@ -43,4 +43,3 @@ export default {
   },
 };
 </script>
--->
