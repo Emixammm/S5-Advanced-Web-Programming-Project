@@ -8,7 +8,7 @@ const port = 3000;
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'Maxime8696++',
+    password: 'password',
     database: 'restaurant_db'
 });
 
@@ -25,7 +25,7 @@ app.use(express.json());
 
 // Endpoint pour récupérer tous les plats
 app.get('/dish', (req, res) => {
-    const sql = `SELECT * FROM dish`; // Table correcte : "dish"
+    const sql = `SELECT * FROM Dish`; // Table correcte : "Dish"
     db.query(sql, (err, results) => {
         if (err) {
             return res.status(500).send(err);
@@ -45,7 +45,7 @@ app.post('/dish', (req, res) => {
         image_path: req.body.image_path || null, // Optionnel
     };
 
-    const sql = 'INSERT INTO dish SET ?';
+    const sql = 'INSERT INTO Dish SET ?';
     db.query(sql, newDish, (err, result) => {
         if (err) {
             return res.status(500).send(err);
@@ -65,7 +65,7 @@ app.delete('/dish/:id', (req, res) => {
         return res.status(400).send({ error: 'ID invalide' });
     }
 
-    const sql = 'DELETE FROM dish WHERE id = ?'; // Table correcte : "dish"
+    const sql = 'DELETE FROM Dish WHERE id = ?'; // Table correcte : "dish"
     db.query(sql, [dishId], (err, result) => {
         if (err) {
             console.error('Erreur lors de la suppression :', err);

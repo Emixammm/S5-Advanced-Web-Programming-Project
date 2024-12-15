@@ -18,7 +18,7 @@ const con = mysql.createConnection({
   });
 
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: "http://localhost:3000",
   methods: ["GET", "POST","DELETE","PUT"],       
   credentials: true,              
 }));
@@ -118,14 +118,14 @@ con.connect(function (err) {
           VALUES (?, ?, ?, ?, ?, ?)`;
 
         Promise.all(
-          dishes.map(dish =>
+          dishes.map(Dish =>
             new Promise((resolve, reject) => {
-              con.query(insertDishQuery, dish, (err, result) => {
+              con.query(insertDishQuery, Dish, (err, result) => {
                 if (err) {
                   console.error("Error inserting dish:", err.message);
                   reject(err);
                 } else {
-                  console.log(`Inserted dish: ${dish[0]}`);
+                  console.log(`Inserted dish: ${Dish[0]}`);
                   resolve(result);
                 }
               });
