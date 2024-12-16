@@ -37,10 +37,9 @@ app.get("/dishes", (req, res) => {
 // Endpoint to delete a dish
 app.delete('/dishes/:id', (req, res) => {
     const dishID = req.params.id;
-  
     const deleteDishQuery = `DELETE FROM Dish WHERE dishID = ?`;
-  
-    con.query(deleteDishQuery, [dishID], (err, result) => {
+
+    db.query(deleteDishQuery, [dishID], (err, result) => {
       if (err) {
         return res.status(500).json({ error: 'Failed to delete the dish' });
       }

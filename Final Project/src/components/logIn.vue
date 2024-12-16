@@ -59,10 +59,13 @@ export default {
             // Admin login
             localStorage.setItem("loggedIn", "true");
             localStorage.setItem("role", "admin"); // Mark the user as an admin
+            console.log("You are an " + localStorage.getItem("role"));
+
             } else {
             // Regular user login
             localStorage.setItem("loggedIn", "true");
             localStorage.setItem("role", "user"); // Regular user
+            console.log("You are an " + localStorage.getItem("role"));
             }
 
             this.$router.push({ name: "Menu" });
