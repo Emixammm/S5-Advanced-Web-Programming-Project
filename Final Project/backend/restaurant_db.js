@@ -4,6 +4,11 @@ const cors = require("cors"); // Import the cors middleware
 
 const app = express();
 
+// Middleware to parse JSON and form data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -33,6 +38,119 @@ app.get("/dishes", (req, res) => {
     }
   });
 });
+
+// Endpoint to handle login
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+  
+    const loginQuery = `
+      SELECT 
+        CASE 
+          WHEN EXISTS (SELECT * FROM Manager WHERE ManagerName = ? AND ManagerPassword = ?) THEN 'admin'
+          WHEN EXISTS (SELECT * FROM Waiter WHERE waiterName = ? AND waiterPassword = ?) THEN 'user'
+          ELSE NULL
+        END AS role
+    `;
+  
+    db.query(loginQuery, [username, password, username, password], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Error during login' });
+        }
+    
+        const role = results[0]?.role;
+    
+        if (role) {
+            res.status(200).json({ message: 'Login successful', role });
+        } else {
+            res.status(401).json({ error: 'Invalid username or password' });
+        }
+    });
+});
+  
+// Add these new routes in your Express server
+
+// Endpoint to fetch managers
+app.get("/managers", (req, res) => {
+    db.query("SELECT * FROM Manager", (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error fetching managers");
+      } else {
+        res.json(results);
+      }
+    });
+  });
+  
+// Endpoint to fetch waiters
+app.get("/waiters", (req, res) => {
+    db.query("SELECT * FROM Waiter", (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error fetching waiters");
+      } else {
+        res.json(results);
+      }
+    });
+  });
+  
+  // Add a new manager
+app.post("/managers", (req, res) => {
+    const { name, password } = req.body;
+    const insertQuery = `INSERT INTO Manager (ManagerName, ManagerPassword) VALUES (?, ?)`;
+    db.query(insertQuery, [name, password], (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error adding manager");
+      } else {
+        res.status(201).send("Manager added successfully");
+      }
+    });
+  });
+  
+  // Delete a manager
+app.delete("/managers/:id", (req, res) => {
+    const managerId = req.params.id;
+    const deleteQuery = `DELETE FROM Manager WHERE managerId = ?`;
+    db.query(deleteQuery, [managerId], (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error deleting manager");
+      } else {
+        res.status(200).send("Manager deleted successfully");
+      }
+    });
+  });
+  
+
+  // Add a new waiter
+app.post("/waiters", (req, res) => {
+    const { name, password } = req.body;
+    const insertQuery = `INSERT INTO Waiter (waiterName, waiterPassword) VALUES (?, ?)`;
+    db.query(insertQuery, [name, password], (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error adding waiter");
+      } else {
+        res.status(201).send("Waiter added successfully");
+      }
+    });
+  });
+  
+  // Delete a waiter
+app.delete("/waiters/:id", (req, res) => {
+    const waiterId = req.params.id;
+    const deleteQuery = `DELETE FROM Waiter WHERE waiterId = ?`;
+    db.query(deleteQuery, [waiterId], (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error deleting waiter");
+      } else {
+        res.status(200).send("Waiter deleted successfully");
+      }
+    });
+  });
+  
 
 // Endpoint to delete a dish
 app.delete('/dishes/:id', (req, res) => {
@@ -150,6 +268,63 @@ con.connect(function (err) {
         if (err) throw err;
         console.log("Table Waiter ensured!");
       });
+
+      // Insert managers into the Manager table
+    const managers = [
+        ['Alice Smith', 'password123'],
+        ['Bob Johnson', 'securepassword'],
+    ];
+  
+    const insertManagerQuery = `INSERT INTO Manager (ManagerName, ManagerPassword) VALUES (?, ?)`;
+    
+    Promise.all(
+        managers.map(manager =>
+        new Promise((resolve, reject) => {
+            con.query(insertManagerQuery, manager, (err, result) => {
+            if (err) {
+                console.error("Error inserting manager:", err.message);
+                reject(err);
+            } else {
+                console.log(`Inserted manager: ${manager[0]}`);
+                resolve(result);
+            }
+            });
+        })
+        )
+    ).then(() => {
+        console.log("All managers inserted successfully.");
+    }).catch(err => {
+        console.error("Error inserting managers:", err);
+    });
+    
+    // Insert waiters into the Waiter table
+    const waiters = [
+        ['Charlie Brown', 'waiterpass1'],
+        ['Diana Prince', 'wondersecure'],
+    ];
+    
+    const insertWaiterQuery = `INSERT INTO Waiter (waiterName, waiterPassword) VALUES (?, ?)`;
+    
+    Promise.all(
+        waiters.map(waiter =>
+        new Promise((resolve, reject) => {
+            con.query(insertWaiterQuery, waiter, (err, result) => {
+            if (err) {
+                console.error("Error inserting waiter:", err.message);
+                reject(err);
+            } else {
+                console.log(`Inserted waiter: ${waiter[0]}`);
+                resolve(result);
+            }
+            });
+        })
+        )
+    ).then(() => {
+        console.log("All waiters inserted successfully.");
+    }).catch(err => {
+        console.error("Error inserting waiters:", err);
+    });
+    
 
       con.query(dishListTable, function (err) {
         if (err) throw err;

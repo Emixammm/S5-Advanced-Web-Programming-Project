@@ -57,7 +57,7 @@ export default {
     return {
       dishes: [], // Array to store fetched dishes
       selectedDishes: [], // Array to store selected dishes
-      isAdmin: (localStorage.getItem("role") || "user")=== "admin",
+      isAdmin: localStorage.getItem("role")=== "admin",
     };
   },
   computed: {
