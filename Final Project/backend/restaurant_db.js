@@ -227,10 +227,10 @@ con.connect(function (err) {
           FOREIGN KEY (dishID) REFERENCES Dish(dishID) ON DELETE CASCADE
       )`;*/
 
-      const customerTable = `CREATE TABLE IF NOT EXISTS Customer (
+      /*const customerTable = `CREATE TABLE IF NOT EXISTS Customer (
           customerId INT AUTO_INCREMENT PRIMARY KEY,
           customerName VARCHAR(255) NOT NULL
-      )`;
+      )`;*/
 
       // Execute table creation queries
       con.query(dishTable, function (err) {
@@ -346,10 +346,10 @@ con.connect(function (err) {
         console.log("Table DishList created.");
       });*/
 
-      con.query(customerTable, function (err) {
+      /*con.query(customerTable, function (err) {
         if (err) throw err;
         console.log("Table Customer created.");
-      });
+      });*/
 
       // Close connection in a separate function
       function closeConnection() {

@@ -1,22 +1,3 @@
-<!--<template>
-  <div id="app">
-    <Plats />
-  </div>
-</template>
-
-<script>
-import Menu from './components/menu.vue';
-
-export default {
-  components: {
-    Menu,
-  },
-};
-</script>
--->
-
-
-
 <template>
   <header>
     <h1>Restaurant name</h1>
