@@ -7,7 +7,7 @@ const app = express();
 const con = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'Maxime8696++', // Replace with your MySQL password
+    password: 'password', // Replace with your MySQL password
   });
 
 app.use(cors({
@@ -35,24 +35,24 @@ con.connect(function (err) {
       // Create tables
       const dishTable = `CREATE TABLE IF NOT EXISTS Dish (
           dishID INT AUTO_INCREMENT PRIMARY KEY,
-          dishName VARCHAR(255) NOT NULL,
-          ingredientList VARCHAR(255) NOT NULL,
+          dishName VARCHAR(255) NOT null,
+          ingredientList VARCHAR(255) NOT null,
           allergenesList VARCHAR(255),
-          dishPrice INT NOT NULL,
-          dishAvailable BOOLEAN DEFAULT TRUE,
+          dishPrice INT NOT null,
+          dishAvailable BOOLEAN DEFAULT true,
           imagePath VARCHAR(255)
       )`;
 
       const managerTable = `CREATE TABLE IF NOT EXISTS Manager (
           managerId INT AUTO_INCREMENT PRIMARY KEY,
-          ManagerName VARCHAR(255) NOT NULL,
-          ManagerPassword VARCHAR(255) NOT NULL
+          ManagerName VARCHAR(255) NOT null,
+          ManagerPassword VARCHAR(255) NOT null
       )`;
 
       const waiterTable = `CREATE TABLE IF NOT EXISTS Waiter (
           waiterId INT AUTO_INCREMENT PRIMARY KEY,
-          waiterName VARCHAR(255) NOT NULL,
-          waiterPassword VARCHAR(255) NOT NULL
+          waiterName VARCHAR(255) NOT null,
+          waiterPassword VARCHAR(255) NOT null
       )`;
 
       const dishListTable = `CREATE TABLE IF NOT EXISTS DishList (
@@ -60,11 +60,11 @@ con.connect(function (err) {
           FOREIGN KEY (dishID) REFERENCES Dish(dishID) ON DELETE CASCADE
       )`;
 
-      const customerTable = `CREATE TABLE IF NOT EXISTS Customer (
+      /*const customerTable = `CREATE TABLE IF NOT EXISTS Customer (
           customerId INT AUTO_INCREMENT PRIMARY KEY,
-          customerName VARCHAR(255) NOT NULL
+          customerName VARCHAR(255) NOT null
       )`;
-
+      */
       // Execute table creation queries
       con.query(dishTable, function (err) {
         if (err) throw err;
@@ -72,11 +72,21 @@ con.connect(function (err) {
 
         // Insert dishes into the Dish table
         const dishes = [
-          ['Spaghetti Bolognese', 'Spaghetti, Beef, Tomato Sauce', 'Gluten', 12, true, '/images/spaghetti.jpg'],
-          ['Caesar Salad', 'Lettuce, Croutons, Parmesan, Caesar Dressing', 'Dairy, Gluten', 8, true, '/images/caesar_salad.jpg'],
           ['Margherita Pizza', 'Flour, Tomato Sauce, Mozzarella', 'Gluten, Dairy', 10, true, '/images/margherita_pizza.jpg'],
+          ['Classic Burger', 'Bun, beef, lettuce, tomato, cheese', 'Gluten, lactose', 11, true, 'images/classic_burger.jpg'],
+          ['Croque Monsieur', 'Bread, ham, cheese, béchamel', 'Gluten, lactose', 7, true, 'images/croque_monsieur.jpg'],
+          ['Quiche Lorraine', 'Eggs, cream, bacon, shortcrust pastry', 'Gluten, eggs, lactose', 8, true, 'images/quiche_lorraine.jpg'],
+          ['Lasagna', 'Pasta, beef, tomato sauce, béchamel', 'Gluten, lactose', 12, true, 'images/lasagna.jpg'],
+          ['Spaghetti Bolognese', 'Spaghetti, Beef, Tomato Sauce', 'Gluten', 12, true, '/images/bolonese.jpg'],
+          ['Spaghetti Carbonara', 'Pasta, eggs, pancetta, parmesan, pepper', 'Gluten, eggs, lactose', 12, true, 'images/carbonara.jpg'],
+          ['Steak and Fries', 'Beef, potatoes, salt', null, 15, true, 'images/steak_fries.jpg'],
+          ['Caesar Salad', 'Lettuce, Croutons, Parmesan, Caesar Dressing', 'Dairy, Gluten', 8, true, '/images/caesar_salad.jpg'],
+          ['Ratatouille', 'Eggplant, zucchini, tomatoes, peppers, onions', null, 8, true, 'images/ratatouille.jpg'],
+          ['Paella', 'Rice, chicken, seafood, saffron', 'Shellfish', 18, true, 'images/paella.jpg'],
           ['Chicken Tikka Masala', 'Chicken, Cream, Spices', 'Dairy', 15, true, '/images/chicken_tikka.jpg'],
-          ['Chocolate Cake', 'Flour, Cocoa, Sugar, Eggs', 'Gluten, Eggs, Dairy', 6, true, '/images/chocolate_cake.jpg'],
+          ['Dark Forest', 'Flour, Cocoa, Sugar, Eggs, Chocolate, Cherry', 'Gluten, Eggs, Dairy', 6, true, '/images/darkforest.jpg'],
+          ['Apple Pie', 'Apples, sugar, cinnamon, butter, pastry', 'Gluten, lactose', 6, true, 'images/apple_pie.jpg'],
+          ['Dame Blanche', 'Vanilla ice cream, chocolate sauce, whipped cream', 'Lactose', 7, true, 'images/dame_blanche.jpg']
         ];
 
         const insertDish = `INSERT INTO Dish (dishName, ingredientList, allergenesList, dishPrice, dishAvailable, imagePath) 
