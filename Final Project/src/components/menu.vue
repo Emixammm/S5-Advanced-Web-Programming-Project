@@ -1,4 +1,7 @@
 <template>
+  <router-link to="/statistics">
+    <button v-if="isAdmin">Go to statistics</button>
+  </router-link>
   <div class="menu">
     <h1>Menu</h1>
 
@@ -47,6 +50,7 @@
       <h3>Total Price: \${{ totalPrice }}</h3>
       <!-- Order Button -->
       <button @click="placeOrder" :disabled="selectedDishes.length === 0">Place Order</button>
+      <router-link to="/order"><button>Go to Orders</button></router-link>
     </div>
   </div>
 </template>
@@ -91,14 +95,24 @@ export default {
       let orders = JSON.parse(localStorage.getItem("orders")) || [];
 
       // Add the current selected dishes to the orders list
-      orders.push({
+      const newOrder = {
         dishes: [...this.selectedDishes],
         totalPrice: this.totalPrice,
         date: new Date().toLocaleString(),
-      });
+      };
+
+      orders.push(newOrder);
 
       // Save the updated orders list back to localStorage
       localStorage.setItem("orders", JSON.stringify(orders));
+
+      // Update total number of orders and total price of orders
+      const totalOrders = orders.length;
+      const totalOrderPrice = orders.reduce((acc, order) => acc + order.totalPrice, 0);
+
+      // Save these stats as local variables in localStorage
+      localStorage.setItem("totalOrders", totalOrders);
+      localStorage.setItem("totalOrderPrice", totalOrderPrice);
 
       // Clear the selected dishes
       this.selectedDishes = [];
@@ -106,6 +120,7 @@ export default {
       // Optionally navigate to the Order page after placing the order
       this.$router.push({ name: "Order" });
     },
+
     async deleteDish(dishID) {
       try {
         const response = await fetch(`http://localhost:3000/dishes/${dishID}`, {

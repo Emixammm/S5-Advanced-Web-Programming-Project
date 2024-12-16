@@ -136,6 +136,21 @@ app.post("/waiters", (req, res) => {
       }
     });
   });
+ 
+  // Endpoint to add a new dish
+app.post("/dishes", (req, res) => {
+    const { dishName, ingredientList, allergenesList, dishPrice, imagePath } = req.body;
+    const insertQuery = `INSERT INTO Dish (dishName, ingredientList, allergenesList, dishPrice, dishAvailable, imagePath) 
+                         VALUES (?, ?, ?, ?, true, ?)`;
+    db.query(insertQuery, [dishName, ingredientList, allergenesList, dishPrice, imagePath], (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error adding dish");
+      } else {
+        res.status(201).send("Dish added successfully");
+      }
+    });
+  });
   
   // Delete a waiter
 app.delete("/waiters/:id", (req, res) => {
@@ -207,10 +222,10 @@ con.connect(function (err) {
           waiterPassword VARCHAR(255) NOT NULL
       )`;
 
-      const dishListTable = `CREATE TABLE IF NOT EXISTS DishList (
+      /*const dishListTable = `CREATE TABLE IF NOT EXISTS DishList (
           dishID INT PRIMARY KEY,
           FOREIGN KEY (dishID) REFERENCES Dish(dishID) ON DELETE CASCADE
-      )`;
+      )`;*/
 
       const customerTable = `CREATE TABLE IF NOT EXISTS Customer (
           customerId INT AUTO_INCREMENT PRIMARY KEY,
@@ -326,10 +341,10 @@ con.connect(function (err) {
     });
     
 
-      con.query(dishListTable, function (err) {
+      /*con.query(dishListTable, function (err) {
         if (err) throw err;
         console.log("Table DishList created.");
-      });
+      });*/
 
       con.query(customerTable, function (err) {
         if (err) throw err;

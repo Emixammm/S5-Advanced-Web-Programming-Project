@@ -24,10 +24,10 @@
         Go back to ordering
       </button><br><br>
       <!-- Button to clear orders and navigate to the Paying page -->
-      <button @click="clearOrdersAndGoToPaying" class="paying-button" :disabled="orders.length === 0">
+      <button v-if="!isUser" @click="clearOrdersAndGoToPaying" class="paying-button" :disabled="orders.length === 0">
         Proceed to Payment
       </button>
-  
+      <button v-if="isAdmin" @click="clearOrders">Clear Orders</button>
 
     </div>
   </template>
@@ -37,6 +37,8 @@
     data() {
       return {
         orders: [], // Array to store all the orders
+        isUser: localStorage.getItem("role")=== "user",
+        isAdmin: localStorage.getItem("role")=== "admin",
       };
     },
     computed: {
@@ -55,7 +57,7 @@
     methods: {
       clearOrdersAndGoToPaying() {
         // Clear the orders from localStorage
-        localStorage.removeItem("Orders");
+        localStorage.removeItem("orders");
   
         // Navigate to the Paying page
         this.$router.push({ name: "Paying" });
@@ -63,6 +65,10 @@
       goBackToMenu() {
         // Navigate back to the Menu page
         this.$router.push({ name: "Menu" });
+      },
+      clearOrders(){
+        localStorage.removeItem("orders");
+        this.orders = [];
       },
     },
   };
