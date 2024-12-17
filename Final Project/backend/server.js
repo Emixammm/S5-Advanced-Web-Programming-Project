@@ -20,7 +20,7 @@ app.use((req, res, next) => {
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '0000',
+    password: 'password',
     database: 'restaurant_db'
 });
 

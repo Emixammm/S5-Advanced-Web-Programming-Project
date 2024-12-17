@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 const con = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '0000', // Replace with your MySQL password
+    password: 'password', // Replace with your MySQL
   });
 
 /*app.use(cors({
@@ -45,15 +45,10 @@ app.post('/login', (req, res) => {
     const { username, password } = req.body;
   
     const loginQuery = `
-      SELECT 
-        CASE 
-          WHEN EXISTS (SELECT * FROM Manager WHERE ManagerName = ? AND ManagerPassword = ?) THEN 'admin'
-          WHEN EXISTS (SELECT * FROM Waiter WHERE waiterName = ? AND waiterPassword = ?) THEN 'user'
-          ELSE NULL
-        END AS role
+      select * from manager;
     `;
   
-    db.query(loginQuery, [username, password, username, password], (err, results) => {
+    db.query(loginQuery, [id, username, password], (err, results) => {
         if (err) {
             console.error(err);
             return res.status(500).json({ error: 'Error during login' });
