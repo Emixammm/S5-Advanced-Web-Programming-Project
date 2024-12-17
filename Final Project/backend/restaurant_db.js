@@ -9,12 +9,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "password",
-  database: "restaurant_db",
-});
+const con = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '0000', // Replace with your MySQL password
+  });
 
 /*app.use(cors({
   origin: "http://localhost:5173",
