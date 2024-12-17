@@ -1,19 +1,26 @@
 <template>
-    <router-link to="/menu"><button>To Menu</button></router-link>
+    <router-link to="/menu" class="button-link"><button>To Menu</button></router-link>
     <div class="restaurant-statistics">
-      <h1>Management Statistics</h1>
+      <br>
+      <h2>Management Statistics</h2>
   
       <!-- Managers Section -->
       <section>
-        <h2>Managers</h2>
-        <form @submit.prevent="addManager">
-          <label for="managerName">Name:</label>
-          <input type="text" v-model="newManager.name" required />
-          <label for="managerPassword">Password:</label>
-          <input type="password" v-model="newManager.password" required />
-          <button type="submit">Add Manager</button>
-        </form>
-  
+        <p class="subtitleStyle">Managers</p>
+        <!-- Add a manager -->
+        <div class="infosCustomer" style="margin-top:0;">
+          <form @submit.prevent="addManager">
+            <label for="managerName">Name:</label>
+            <input type="text" v-model="newManager.name" required />
+            <label for="managerPassword">Password:</label>
+            <input type="password" v-model="newManager.password" required />
+            <p class="button-link">
+              <button type="submit">Add Manager</button>
+            </p>
+            
+          </form>
+        </div>
+        <!-- Show Managers -->
         <table>
           <thead>
             <tr>
@@ -27,24 +34,31 @@
               <td>{{ manager.managerId }}</td>
               <td>{{ manager.ManagerName }}</td>
               <td>
-                <button @click="deleteManager(manager.managerId)">Delete</button>
+                <p class="button-link">
+                  <button @click="deleteManager(manager.managerId)">Delete</button>
+                </p>
               </td>
             </tr>
           </tbody>
         </table>
       </section>
-  
+      <br>
       <!-- Waiters Section -->
       <section>
-        <h2>Waiters</h2>
-        <form @submit.prevent="addWaiter">
-          <label for="waiterName">Name:</label>
-          <input type="text" v-model="newWaiter.name" required />
-          <label for="waiterPassword">Password:</label>
-          <input type="password" v-model="newWaiter.password" required />
-          <button type="submit">Add Waiter</button>
-        </form>
-  
+        <!-- Add Waiter -->
+        <p class="subtitleStyle">Waiters</p>
+        <div class="infosCustomer" style="margin-top:0;">
+          <form @submit.prevent="addWaiter">
+            <label for="waiterName">Name:</label>
+            <input type="text" v-model="newWaiter.name" required />
+            <label for="waiterPassword">Password:</label>
+            <input type="password" v-model="newWaiter.password" required />
+            <p class="button-link">
+              <button type="submit">Add Waiter</button>
+            </p>
+          </form>
+        </div>
+        <!-- Show Waiters -->
         <table>
           <thead>
             <tr>
@@ -58,28 +72,37 @@
               <td>{{ waiter.waiterId }}</td>
               <td>{{ waiter.waiterName }}</td>
               <td>
-                <button @click="deleteWaiter(waiter.waiterId)">Delete</button>
+                <p class="button-link">
+                  <button @click="deleteWaiter(waiter.waiterId)">Delete</button>
+                </p>
               </td>
             </tr>
           </tbody>
         </table>
       </section>
-  
+      <br>
       <!-- Dishes Section -->
       <section>
-        <h2>Dishes</h2>
-        <form @submit.prevent="addDish">
-          <label for="dishName">Dish Name:</label>
-          <input type="text" v-model="newDish.name" required />
-          <label for="dishPrice">Price:</label>
-          <input type="number" v-model="newDish.price" required />
-          <label for="dishIngredients">Ingredients:</label>
-          <input type="text" v-model="newDish.ingredients" required />
-          <label for="dishAllergens">Allergens:</label>
-          <input type="text" v-model="newDish.allergens" />
-          <button type="submit">Add Dish</button>
-        </form>
+        <p class="subtitleStyle">Dishes</p>
+        <!-- Add Dish -->
+        <div class="infosCustomer" style="margin-top:0;">
+          <form @submit.prevent="addDish">
+            <label for="dishName">Dish Name:</label>
+            <input type="text" v-model="newDish.name" required />
+            <label for="dishPrice">Price:</label>
+            <input type="number" v-model="newDish.price" required />
+            <label for="dishIngredients">Ingredients:</label>
+            <input type="text" v-model="newDish.ingredients" required />
+            <label for="dishAllergens">Allergens:</label>
+            <input type="text" v-model="newDish.allergens" />
+            <p class="button-link">
+              <button type="submit">Add Dish</button>
+            </p>
+            
+          </form>
+        </div>
   
+        <!-- Show Dishes -->
         <table>
           <thead>
             <tr>
@@ -99,7 +122,9 @@
               <td>{{ dish.ingredientList }}</td>
               <td>{{ dish.allergenesList || 'None' }}</td>
               <td>
-                <button @click="deleteDish(dish.dishID)">Delete</button>
+                <p class="button-link">
+                  <button @click="deleteDish(dish.dishID)">Delete</button>
+                </p>
               </td>
             </tr>
           </tbody>
@@ -107,18 +132,18 @@
       </section>
     </div>
   
-    <div class="statistics">
-      <h1>Order Statistics</h1>
+    <div>
+      <h2>Order Statistics</h2>
   
       <!-- Display total number of orders and total price -->
-      <div class="order-stats">
-        <p>Total Number of Orders: {{ totalOrders }}</p>
-        <p>Total Price of Orders: \${{ totalOrderPrice }}</p>
+      <div>
+        <p class="subtitleStyle">Total Number of Orders: {{ totalOrders }}</p>
+        <p class="subtitleStyle">Total Price of Orders: {{ totalOrderPrice }}¥</p>
       </div>
     </div>
   </template>
   
-  <script>
+<script>
   export default {
     data() {
       return {
@@ -146,6 +171,7 @@
     },
   
     methods: {
+      //Upload the manager list from the API/Database to use and print it
       async fetchManagers() {
         try {
           const response = await fetch("http://localhost:3000/managers");
@@ -154,6 +180,7 @@
           console.error("Error fetching managers:", error);
         }
       },
+      //Upload the waiter list from the API/Database to use and print it
       async fetchWaiters() {
         try {
           const response = await fetch("http://localhost:3000/waiters");
@@ -162,6 +189,7 @@
           console.error("Error fetching waiters:", error);
         }
       },
+      //Upload the dishes list from the API/Database to use and print it
       async fetchDishes() {
         try {
           const response = await fetch("http://localhost:3000/dishes");
@@ -215,18 +243,18 @@
             dishName: this.newDish.name,
             dishPrice: this.newDish.price,
             ingredientList: this.newDish.ingredients,
-            allergenesList: this.newDish.allergens || null, // If no allergens, set to null
-            dishAvailable: true, // Default to true
-            imagePath: "", // Default image path or empty string
+            allergenesList: this.newDish.allergens || null, //If no allergens, set to null
+            dishAvailable: true, //Default to true
+            imagePath: "", //Default image path or empty string
           }),
         });
         if (response.ok) {
-          // Reset the form fields after success
+          //Reset the form fields after success
           this.newDish.name = "";
           this.newDish.price = "";
           this.newDish.ingredients = "";
           this.newDish.allergens = "";
-          this.fetchDishes(); // Refresh the dishes list
+          this.fetchDishes();// Refresh the dishes list
         } else {
           console.error("Error adding dish");
         }
@@ -277,9 +305,9 @@
         }
       },
       fetchOrders() {
-        // Retrieve the orders from localStorage (or empty array if no orders)
+        //Retrieve the orders from localStorage (or empty array if no orders)
         const orders = JSON.parse(localStorage.getItem("orders")) || [];
-        this.orders = orders; // Store the orders in the component data
+        this.orders = orders; //Store the orders in the component data
       },
     },
     mounted() {
@@ -288,52 +316,15 @@
       this.fetchDishes();
       this.fetchOrders();
   
-      // Fetch total number of orders and total order price from localStorage
+      //Fetch total number of orders and total order price from localStorage
       const totalOrders = localStorage.getItem("totalOrders");
       const totalOrderPrice = localStorage.getItem("totalOrderPrice");
   
-      // If values exist, update local variables
+      //If values exist, update local variables
       if (totalOrders && totalOrderPrice) {
         this.totalOrders = parseInt(totalOrders);
         this.totalOrderPrice = parseFloat(totalOrderPrice);
       }
     },
   };
-  </script>
-  
-  <style scoped>
-    /* Add your styling for dishes section here */
-    .restaurant-statistics {
-      padding: 1rem;
-    }
-  
-    section {
-      margin-bottom: 2rem;
-    }
-  
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-  
-    th, td {
-      padding: 0.5rem;
-      border: 1px solid #ddd;
-      text-align: left;
-    }
-  
-    form {
-      margin-bottom: 1rem;
-    }
-  
-    .statistics {
-      padding: 2rem;
-      font-family: Arial, sans-serif;
-    }
-  
-    .order-stats {
-      font-size: 1.2rem;
-      margin-top: 1rem;
-    }
-  </style>
-  
+</script>

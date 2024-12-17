@@ -22,11 +22,19 @@ const con = mysql.createConnection({
     password: 'password', // Replace with your MySQL password
   });
 
-app.use(cors({
+/*app.use(cors({
   origin: "http://localhost:5173",
   methods: ["GET", "POST","DELETE","PUT"],       
   credentials: true,              
-}));
+}));*/
+
+//CORS Header otherwise my browser block it
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*'); 
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'); 
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); 
+  next();
+});
 
 app.get("/dishes", (req, res) => {
   db.query("SELECT * FROM Dish", (err, results) => {
@@ -67,8 +75,6 @@ app.post('/login', (req, res) => {
         }
     });
 });
-  
-// Add these new routes in your Express server
 
 // Endpoint to fetch managers
 app.get("/managers", (req, res) => {
@@ -222,16 +228,6 @@ con.connect(function (err) {
           waiterPassword VARCHAR(255) NOT NULL
       )`;
 
-      /*const dishListTable = `CREATE TABLE IF NOT EXISTS DishList (
-          dishID INT PRIMARY KEY,
-          FOREIGN KEY (dishID) REFERENCES Dish(dishID) ON DELETE CASCADE
-      )`;*/
-
-      /*const customerTable = `CREATE TABLE IF NOT EXISTS Customer (
-          customerId INT AUTO_INCREMENT PRIMARY KEY,
-          customerName VARCHAR(255) NOT NULL
-      )`;*/
-
       // Execute table creation queries
       con.query(dishTable, function (err) {
         if (err) throw err;
@@ -239,11 +235,21 @@ con.connect(function (err) {
 
         // Insert dishes into the Dish table
         const dishes = [
-          ['Spaghetti Bolognese', 'Spaghetti, Beef, Tomato Sauce', 'Gluten', 12, true, '/images/spaghetti.jpg'],
-          ['Caesar Salad', 'Lettuce, Croutons, Parmesan, Caesar Dressing', 'Dairy, Gluten', 8, true, '/images/caesar_salad.jpg'],
           ['Margherita Pizza', 'Flour, Tomato Sauce, Mozzarella', 'Gluten, Dairy', 10, true, '/images/margherita_pizza.jpg'],
+          ['Classic Burger', 'Bun, beef, lettuce, tomato, cheese', 'Gluten, lactose', 11, true, 'images/classic_burger.jpg'],
+          ['Croque Monsieur', 'Bread, ham, cheese, béchamel', 'Gluten, lactose', 7, true, 'images/croque_monsieur.jpg'],
+          ['Quiche Lorraine', 'Eggs, cream, bacon, shortcrust pastry', 'Gluten, eggs, lactose', 8, true, 'images/quiche_lorraine.jpg'],
+          ['Lasagna', 'Pasta, beef, tomato sauce, béchamel', 'Gluten, lactose', 12, true, 'images/lasagna.jpg'],
+          ['Spaghetti Bolognese', 'Spaghetti, Beef, Tomato Sauce', 'Gluten', 12, true, '/images/bolonese.jpg'],
+          ['Spaghetti Carbonara', 'Pasta, eggs, pancetta, parmesan, pepper', 'Gluten, eggs, lactose', 12, true, 'images/carbonara.jpg'],
+          ['Steak and Fries', 'Beef, potatoes, salt', null, 15, true, 'images/steak_fries.jpg'],
+          ['Caesar Salad', 'Lettuce, Croutons, Parmesan, Caesar Dressing', 'Dairy, Gluten', 8, true, '/images/caesar_salad.jpg'],
+          ['Ratatouille', 'Eggplant, zucchini, tomatoes, peppers, onions', null, 8, true, 'images/ratatouille.jpg'],
+          ['Paella', 'Rice, chicken, seafood, saffron', 'Shellfish', 18, true, 'images/paella.jpg'],
           ['Chicken Tikka Masala', 'Chicken, Cream, Spices', 'Dairy', 15, true, '/images/chicken_tikka.jpg'],
-          ['Chocolate Cake', 'Flour, Cocoa, Sugar, Eggs', 'Gluten, Eggs, Dairy', 6, true, '/images/chocolate_cake.jpg'],
+          ['Dark Forest', 'Flour, Cocoa, Sugar, Eggs, Chocolate, Cherry', 'Gluten, Eggs, Dairy', 6, true, '/images/darkforest.jpg'],
+          ['Apple Pie', 'Apples, sugar, cinnamon, butter, pastry', 'Gluten, lactose', 6, true, 'images/apple_pie.jpg'],
+          ['Dame Blanche', 'Vanilla ice cream, chocolate sauce, whipped cream', 'Lactose', 7, true, 'images/dame_blanche.jpg']
         ];
 
         const insertDishQuery = `INSERT INTO Dish (dishName, ingredientList, allergenesList, dishPrice, dishAvailable, imagePath) 
@@ -285,10 +291,11 @@ con.connect(function (err) {
       });
 
       // Insert managers into the Manager table
-    const managers = [
-        ['Alice Smith', 'password123'],
-        ['Bob Johnson', 'securepassword'],
-    ];
+      const managers = [
+        ['MaximeTang', 'Tang'],
+        ['TiphaineFournier', 'Fournier'],
+        ['AlexandreGobe','Gobe']
+      ];
   
     const insertManagerQuery = `INSERT INTO Manager (ManagerName, ManagerPassword) VALUES (?, ?)`;
     
@@ -314,8 +321,10 @@ con.connect(function (err) {
     
     // Insert waiters into the Waiter table
     const waiters = [
-        ['Charlie Brown', 'waiterpass1'],
-        ['Diana Prince', 'wondersecure'],
+      ['SamuelDoyen', 'Doyen'],
+      ['ThibaultBial', 'Bial'],
+      ['JonathanAyeto', 'Ayeto'],
+      ['MathisBeurotte','Beurotte']
     ];
     
     const insertWaiterQuery = `INSERT INTO Waiter (waiterName, waiterPassword) VALUES (?, ?)`;
@@ -339,17 +348,6 @@ con.connect(function (err) {
     }).catch(err => {
         console.error("Error inserting waiters:", err);
     });
-    
-
-      /*con.query(dishListTable, function (err) {
-        if (err) throw err;
-        console.log("Table DishList created.");
-      });*/
-
-      /*con.query(customerTable, function (err) {
-        if (err) throw err;
-        console.log("Table Customer created.");
-      });*/
 
       // Close connection in a separate function
       function closeConnection() {
