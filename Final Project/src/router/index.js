@@ -1,8 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 
-import App from '../App.vue';
-import Qr from '../components/QrCode.vue';
 import prerequisites from '../components/prerequisites.vue';
 import menu from '../components/menu.vue';
 import order from "../components/order.vue";

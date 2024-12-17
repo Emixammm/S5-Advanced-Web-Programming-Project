@@ -1,7 +1,7 @@
 <template>
-  <div class="login">
-    <h1>Login</h1>
-    <form @submit.prevent="handleLogin" class="login-form">
+  <div class="infosCustomer">
+    <h2>Login</h2>
+    <form @submit.prevent="handleLogin">
       <div>
         <label for="username">Username:</label>
         <input
@@ -24,9 +24,9 @@
         />
       </div>
 
-      <div>
-        <button type="submit" class="login-button">Login</button>
-      </div>
+      <p class="button-link">
+        <button type="submit">Login</button>
+      </p>
 
       <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
     </form>
@@ -57,12 +57,6 @@ export default {
         localStorage.setItem("loggedIn", "true");
         localStorage.setItem("role", role);
 
-        if (role === "admin") {
-          console.log("You are logged in as an admin");
-        } else if (role === "user") {
-          console.log("You are logged in as a user");
-        }
-
         this.$router.push({ name: "Menu" });
       } catch (error) {
         this.errorMessage = error.response?.data?.error || "Login failed. Please try again.";
@@ -71,3 +65,15 @@ export default {
   },
 };
 </script>
+
+<style>
+  label, #totalPrice, .subtitleStyle{
+  font-family: 'Arial Black', sans-serif;
+  font-size: 1.5rem;
+  color: #1e3a8a;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  margin-bottom: 5px;
+  }
+</style>
