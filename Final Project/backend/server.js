@@ -1,9 +1,11 @@
 const express = require('express');
 const mysql = require('mysql2');
+const cors = require('cors');
 const app = express();
 
 const port = 3000;
 
+app.use(cors());
 
 //CORS Header otherwise my browser block it
 app.use((req, res, next) => {
@@ -18,7 +20,7 @@ app.use((req, res, next) => {
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'password',
+    password: '0000',
     database: 'restaurant_db'
 });
 
