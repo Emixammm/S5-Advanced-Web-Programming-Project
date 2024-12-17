@@ -16,12 +16,6 @@ const db = mysql.createConnection({
   database: "restaurant_db",
 });
 
-const con = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'password', // Replace with your MySQL password
-  });
-
 /*app.use(cors({
   origin: "http://localhost:5173",
   methods: ["GET", "POST","DELETE","PUT"],       

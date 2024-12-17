@@ -1,5 +1,6 @@
 const express = require('express');
 const mysql = require('mysql2');
+const cors = require('cors');
 const app = express();
 
 const port = 3000;
@@ -45,7 +46,7 @@ app.get('/dishes', (req, res) => {
 });
 
 //router to add a new dish
-app.post('/dish', (req, res) => {
+app.post('/dishes', (req, res) => {
     const newDish = {
         dish_name: req.body.dish_name,
         ingredient_list: req.body.ingredient_list,

@@ -85,20 +85,21 @@ export default {
     //Upload the dishes list from the API/Database to use and print it
     async fetchDishes() {
       try {
-        const response = await fetch("http://localhost:3000/dishes");
+        const response = await fetch("http://localhost:3000/dishes"); // Remplacez l'URL ici
         if (!response.ok) {
-          throw new Error("Failed to fetch dishes");
+          throw new Error(`Failed to fetch dishes: ${response.statusText}`);
         }
         const data = await response.json();
-        //Add selectedQuantity for each dish to have the quantity of them
+        // Ajoute selectedQuantity pour chaque plat
         this.dishes = data.map(dish => ({
           ...dish,
-          selectedQuantity: 0, //Initialization
+          selectedQuantity: 0, // Initialisation
         }));
       } catch (error) {
         console.error("Error fetching dishes:", error);
       }
     },
+
 
     toggleDishSelection(dish) {
       //Remove dish from the list if quantity = 0
